@@ -1,0 +1,9 @@
+ALTER TABLE "campaigns" ADD COLUMN "borrower_type" varchar(50);--> statement-breakpoint
+ALTER TABLE "campaigns" ADD COLUMN "segment" varchar(100);--> statement-breakpoint
+ALTER TABLE "campaigns" ADD COLUMN "product_group" varchar(100);--> statement-breakpoint
+ALTER TABLE "campaigns" ADD COLUMN "product_type" varchar(100);--> statement-breakpoint
+ALTER TABLE "campaigns" ADD COLUMN "sub_product_type" varchar(100);--> statement-breakpoint
+ALTER TABLE "campaigns" ADD COLUMN "product_variant" varchar(100);--> statement-breakpoint
+ALTER TABLE "campaigns" ADD COLUMN "scheme_name" varchar(150);--> statement-breakpoint
+ALTER TABLE "campaigns" ADD COLUMN "scheme_code" varchar(100);--> statement-breakpoint
+-- Skipping users columns; already present in environment

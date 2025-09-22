@@ -1,0 +1,237 @@
+{
+  "info": {
+    "name": "CMS Digital Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth","register"] },
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"checker@yourorg.com\",\n  \"password\": \"StrongP@ssw0rd\",\n  \"fullName\": \"Checker User\",\n  \"roles\": [\"Checker\"]\n}" }
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@yourorg.com\",\n  \"password\": \"StrongP@ssw0rd\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const t = pm.response.json().access_token;",
+              "if (t) { pm.environment.set('token', t); }"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "Reference",
+      "item": [
+        {
+          "name": "States",
+          "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/reference/states", "host": ["{{baseUrl}}"], "path": ["reference","states"] } }
+        },
+        {
+          "name": "DPD Buckets",
+          "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/reference/dpd", "host": ["{{baseUrl}}"], "path": ["reference","dpd"] } }
+        },
+        {
+          "name": "Channels",
+          "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/reference/channels", "host": ["{{baseUrl}}"], "path": ["reference","channels"] } }
+        },
+        {
+          "name": "Languages",
+          "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/reference/languages", "host": ["{{baseUrl}}"], "path": ["reference","languages"] } }
+        },
+        {
+          "name": "Templates by Channel",
+          "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/reference/templates?channelId={{channelId}}", "host": ["{{baseUrl}}"], "path": ["reference","templates"], "query": [{"key":"channelId","value":"{{channelId}}"}] } }
+        }
+      ]
+    },
+    {
+      "name": "Campaigns - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": { "raw": "{{baseUrl}}/campaigns", "host": ["{{baseUrl}}"], "path": ["campaigns"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stateId\": 1,\n  \"dpdId\": 1,\n  \"channelId\": 1,\n  \"templateId\": 1,\n  \"languageId\": 1,\n  \"retries\": 1,\n  \"retryIntervalMinutes\": 30,\n  \"startDate\": \"2025-09-20\",\n  \"endDate\": \"2025-12-31\",\n  \"borrowerType\": \"New\",\n  \"segment\": \"Retail\",\n  \"productGroup\": \"Lending\",\n  \"productType\": \"PL\",\n  \"subProductType\": \"PL-Std\",\n  \"productVariant\": \"Variant-A\",\n  \"schemeName\": \"Festive\",\n  \"schemeCode\": \"FSTV25\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const id = pm.response.json().id;",
+              "if (id) { pm.environment.set('campaignId', id); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Campaigns - List",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns?page=1&limit=10&search=&sortBy=createdAt&sortOrder=desc", "host": ["{{baseUrl}}"], "path": ["campaigns"], "query": [{"key":"page","value":"1"},{"key":"limit","value":"10"},{"key":"search","value":""},{"key":"sortBy","value":"createdAt"},{"key":"sortOrder","value":"desc"}] }
+      }
+    },
+    {
+      "name": "Campaigns - Approval Ready (Draft)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/approval-ready/list?page=1&limit=10&search=&sortBy=createdAt&sortOrder=desc", "host": ["{{baseUrl}}"], "path": ["campaigns","approval-ready","list"], "query": [{"key":"page","value":"1"},{"key":"limit","value":"10"},{"key":"search","value":""},{"key":"sortBy","value":"createdAt"},{"key":"sortOrder","value":"desc"}] }
+      }
+    },
+    {
+      "name": "Campaigns - Get By Id",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/{{campaignId}}", "host": ["{{baseUrl}}"], "path": ["campaigns","{{campaignId}}"] }
+      }
+    },
+    {
+      "name": "Campaigns - Update",
+      "request": {
+        "method": "PUT",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/{{campaignId}}", "host": ["{{baseUrl}}"], "path": ["campaigns","{{campaignId}}"] },
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"Active\"\n}" }
+      }
+    },
+    {
+      "name": "Campaigns - Assign",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/{{campaignId}}/assign", "host": ["{{baseUrl}}"], "path": ["campaigns","{{campaignId}}","assign"] }
+      }
+    },
+    {
+      "name": "Campaigns - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/{{campaignId}}", "host": ["{{baseUrl}}"], "path": ["campaigns","{{campaignId}}"] }
+      }
+    },
+    {
+      "name": "Targeting - Find Campaigns",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/targeting/find-campaigns", "host": ["{{baseUrl}}"], "path": ["targeting","find-campaigns"] },
+        "body": { "mode": "raw", "raw": "{\n  \"stateIds\": [1],\n  \"channelIds\": [1]\n}" }
+      }
+    },
+    {
+      "name": "Targeting - Suggestions",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/targeting/suggestions", "host": ["{{baseUrl}}"], "path": ["targeting","suggestions"] },
+        "body": { "mode": "raw", "raw": "{\n  \"channelIds\": [1]\n}" }
+      }
+    },
+    {
+      "name": "Targeting - Performance",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/targeting/campaign/{{campaignId}}/performance", "host": ["{{baseUrl}}"], "path": ["targeting","campaign","{{campaignId}}","performance"] }
+      }
+    },
+    {
+      "name": "Approval - Submit Campaign",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/approval/{{campaignId}}/submit", "host": ["{{baseUrl}}"], "path": ["campaigns","approval","{{campaignId}}","submit"] },
+        "body": { "mode": "raw", "raw": "{\n  \"remarks\": \"Ready for approval - all conditions validated\"\n}" }
+      }
+    },
+    {
+      "name": "Approval - Get Pending",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/approval/pending?page=1&limit=10&search=&sortBy=submittedForApprovalAt&sortOrder=desc", "host": ["{{baseUrl}}"], "path": ["campaigns","approval","pending"], "query": [ { "key": "page", "value": "1" }, { "key": "limit", "value": "10" }, { "key": "search", "value": "" }, { "key": "sortBy", "value": "submittedForApprovalAt" }, { "key": "sortOrder", "value": "desc" } ] }
+      }
+    },
+    {
+      "name": "Approval - Get Campaign Review",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/approval/{{campaignId}}/review", "host": ["{{baseUrl}}"], "path": ["campaigns","approval","{{campaignId}}","review"] }
+      }
+    },
+    {
+      "name": "Approval - Approve Campaign",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/approval/{{campaignId}}/approve", "host": ["{{baseUrl}}"], "path": ["campaigns","approval","{{campaignId}}","approve"] },
+        "body": { "mode": "raw", "raw": "{\n  \"remarks\": \"Campaign approved - all conditions look good\"\n}" }
+      }
+    },
+    {
+      "name": "Approval - Reject Campaign",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/approval/{{campaignId}}/reject", "host": ["{{baseUrl}}"], "path": ["campaigns","approval","{{campaignId}}","reject"] },
+        "body": { "mode": "raw", "raw": "{\n  \"rejectionRemarks\": \"Campaign rejected - missing required validation criteria\"\n}" }
+      }
+    },
+    {
+      "name": "Approval - Get History",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/approval/{{campaignId}}/history", "host": ["{{baseUrl}}"], "path": ["campaigns","approval","{{campaignId}}","history"] }
+      }
+    },
+    {
+      "name": "Approval - Export",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/campaigns/approval/export", "host": ["{{baseUrl}}"], "path": ["campaigns","approval","export"] }
+      }
+    }
+  ]
+}
+
+
+
