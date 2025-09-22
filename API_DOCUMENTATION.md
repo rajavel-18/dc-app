@@ -1,4 +1,4 @@
-# Campaign Management System API Documentation
+# Management System API Documentation
 
 ## Overview
 This API provides comprehensive campaign management functionality with targeting engine, CRUD operations, and metrics tracking.
